@@ -96,7 +96,7 @@ app.get('/api/entries', async (req, res, next) => {
 });
 
 // get specific entry
-app.get('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
+app.get('/api/entries/:entryId', async (req, res, next) => {
   try {
     const { entryId } = req.params;
     if (!Number.isInteger(+entryId) || +entryId <= 0) {
@@ -117,7 +117,7 @@ app.get('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
 });
 
 // add new entry
-app.post('/api/entries', authMiddleware, async (req, res, next) => {
+app.post('/api/entries', async (req, res, next) => {
   try {
     const { title, notes, photoUrl } = req.body;
     if (!title || !notes || !photoUrl) {
@@ -139,7 +139,7 @@ app.post('/api/entries', authMiddleware, async (req, res, next) => {
 });
 
 // update an entry
-app.put('/api/entries/:entryId', authMiddleware, async (req, res, next) => {
+app.put('/api/entries/:entryId', async (req, res, next) => {
   try {
     const { entryId } = req.params;
     const { title, notes, photoUrl } = req.body;
