@@ -32,19 +32,19 @@ function writeData(data: Data): void {
 }
 
 export async function readEntries(): Promise<Entry[]> {
-  const response = await fetch('api/entries');
+  const response = await fetch('/api/entries');
   if (!response.ok) throw new Error('failed to fetch');
   return response.json();
 }
 
 export async function readEntry(entryId: number): Promise<Entry | undefined> {
-  const response = await fetch(`api/entries/${entryId}`);
+  const response = await fetch(`/api/entries/${entryId}`);
   if (!response.ok) throw new Error(`failed to fetch with entryId ${entryId}`);
   return response.json();
 }
 
 export async function addEntry(entry: Entry): Promise<Entry> {
-  const response = await fetch(`api/entries`, {
+  const response = await fetch(`/api/entries`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(entry),
@@ -54,13 +54,15 @@ export async function addEntry(entry: Entry): Promise<Entry> {
 }
 
 export async function updateEntry(entry: Entry): Promise<Entry> {
-  const data = readData();
-  const newEntries = data.entries.map((e) =>
-    e.entryId === entry.entryId ? entry : e
-  );
-  data.entries = newEntries;
-  writeData(data);
-  return entry;
+  if (!entry.entryId) throw new Error('entryId is missing');
+  const response = await fetch(`/api/entries/:${entry.entryId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry),
+  });
+  console.log(response);
+  if (!response.ok) throw new Error(`failed to fetch`);
+  return response.json();
 }
 
 export async function removeEntry(entryId: number): Promise<void> {
